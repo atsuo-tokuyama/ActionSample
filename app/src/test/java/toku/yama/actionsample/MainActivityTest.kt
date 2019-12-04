@@ -8,6 +8,6 @@ class MainActivityTest {
 
     @Test
     fun addition() {
-        assertEquals(4, 2 - 2)
+        assertEquals(4, 2 + 2)
     }
 }
