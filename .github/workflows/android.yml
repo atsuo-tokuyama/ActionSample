@@ -23,3 +23,5 @@ jobs:
         -F "message=sample" \
         "https://deploygate.com/api/users/${{secrets.DEPLOYGATE_USER}}/apps"
 
+
+
