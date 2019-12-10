@@ -32,3 +32,9 @@ jobs:
         run: |
           echo ${JOB_RESULT}
 
+      - name: Check build result3
+        if: env.JOB_RESULT==1
+        run: |
+          echo ${JOB_RESULT}
+
+
