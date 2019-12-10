@@ -27,18 +27,18 @@ jobs:
       with:
         name: code-coverage-report
         path: app/build/reports/tests/testDebugUnitTest
-    #  The following is Archiving code coverage results
+    #  The following is Sending message to Slack
     - name: Slack notification
       # success() or failure() or always()
       if: always()
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: ActionSample
+        SLACK_USERNAME: ${{ github.repository }}
         SLACK_CHANNEL: ci_test
         SLACK_OVERRIDE_MESSAGE: 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
       uses: Ilshidur/action-slack@master
-      with:
-        args: 'A new commit has been pushed.'
+    #  with:
+    #    args: 'A new commit has been pushed.'
     
     # The following is uploading debug apk to the deploygate
     #- name: Distribute App
