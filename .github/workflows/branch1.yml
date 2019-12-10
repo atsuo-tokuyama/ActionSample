@@ -21,11 +21,11 @@ jobs:
       #  run: ./gradlew assembleDebug
       - name: Check build result1
         run: |
-          ::set-env name=JOB_RESULT::-1
           echo ${JOB_RESULT}
           echo "::set-env name=JOB_RESULT::1"
           echo ${JOB_RESULT}
           echo "::set-env name=JOB_RESULT::2"
+          echo ${JOB_RESULT}
 
       - name: Check build result2
         run: |
