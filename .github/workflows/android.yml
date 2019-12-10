@@ -16,11 +16,11 @@ jobs:
       with:
         java-version: 1.8
     # The following generates a debug APK
-    - name: Build with Gradle
-      run: ./gradlew assembleDebug
+    #- name: Build with Gradle
+    #  run: ./gradlew assembleDebug
     # The following is running unit tests
-    - name: Unit Test
-      run: ./gradlew test
+    #- name: Unit Test
+    #  run: ./gradlew test
     #  The following is Archiving code coverage results
     - name: Archive code coverage results
       uses: actions/upload-artifact@v1
@@ -35,7 +35,7 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ActionSample
         SLACK_CHANNEL: ci_test
-        SLACK_OVERRIDE_MESSAGE: 'https://github.com/${{ github.repository }}/${GITHUB_SHA}'
+        SLACK_OVERRIDE_MESSAGE: 'https://github.com/${{ github.repository }}/${{ github.sha }}'
       uses: Ilshidur/action-slack@master
       with:
         args: 'A new commit has been pushed.'
