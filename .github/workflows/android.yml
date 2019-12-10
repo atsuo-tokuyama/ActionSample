@@ -46,9 +46,10 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ${{ github.repository }}
+        SLACK_COLOR: '#ff0000'
         SLACK_CHANNEL: ci_test
         SLACK_TITLE: ':fire::fire::fire: Test error! :fire::fire::fire:'
-        SLACK_MESSAGE: "Build error! Please check github!"
+        SLACK_MESSAGE: "Test error! Please check github!"
         # 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
       uses: rtCamp/action-slack-notify@master
     - name: Slack notification when test success
