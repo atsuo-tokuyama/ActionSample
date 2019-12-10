@@ -7,8 +7,11 @@ on:
 jobs:
   build:
     env:
+      # ビルドの成否
       BUILD_RESULT: 0
+      # テストの成否
       TEST_RESULT: 0
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
     runs-on: ubuntu-latest
 
     steps:
@@ -17,10 +20,12 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+
     # The following generates a debug APK
     - name: Build with Gradle
       run: ./gradlew assembleDebug
 
+    # saving build result
     - name: Check build result
       if: failure()
       run: |
@@ -28,9 +33,9 @@ jobs:
 
     #  The following is Sending message to Slack when build failed
     - name: Slack Notification when build failed
-      if: always() && env.BUILD_RESULT==1
+      if: failure()
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        #SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_COLOR: '#ff0000'
         SLACK_TITLE: ':fire::fire::fire: Build error! :fire::fire::fire:'
         SLACK_MESSAGE: "Build error! Please check github!"
@@ -45,36 +50,41 @@ jobs:
       if: success()
       run: ./gradlew test
 
-    - name: Check build result
+    # saving test result
+    - name: Check test result
+      # ビルドは成功しているのにfailureの場合はテストがエラーとなっている
       if: failure() && env.BUILD_RESULT==0
       run: |
         echo "::set-env name=TEST_RESULT::1"
 
     # The following is Archiving code coverage results
     - name: Archive code coverage results
+      # ビルドは成功が成功していればテストを実行しているのでカバレッジレポートをアップロードします
       if: always() && env.BUILD_RESULT==0
       uses: actions/upload-artifact@v1
       with:
         name: code-coverage-report
         path: app/build/reports/tests/testDebugUnitTest
 
-    #  The following is Sending message to Slack
+    #  The following is Sending message to Slack when testing failed
     - name: Slack notification when test failed
-      # success() or failure() or always()
-      if: failure() && env.BUILD_RESULT==0 && env.TEST_RESULT==1
+      # テストが失敗していればスラックに通知します
+      if: failure() && env.TEST_RESULT==1
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        #SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ${{ github.repository }}
         SLACK_COLOR: '#ffff00'
         SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
         SLACK_TITLE: ':thumbsdown::thumbsdown::thumbsdown: Test error! :thumbsdown::thumbsdown::thumbsdown:'
         SLACK_MESSAGE: "Test error! Please check github!"
-        # 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
       uses: rtCamp/action-slack-notify@master
+
+      #  The following is Sending message to Slack when success
     - name: Slack notification when test success
+      # 全て問題なければスラックに通知します
       if: success()
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        #SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ${{ github.repository }}
         SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
         SLACK_TITLE: ':rocket::rocket::rocket: Finished build and test! :rocket::rocket::rocket:'
