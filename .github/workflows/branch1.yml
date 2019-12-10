@@ -20,13 +20,9 @@ jobs:
       #- name: Build with Gradle
       #  run: ./gradlew assembleDebug
       - name: Check build result1
-        if: failure()
         run: |
           echo ${JOB_RESULT}
 
       - name: Check build result2
-        if: failure()
         run: |
           echo ${JOB_RESULT}
-        env:
-          JOB_RESULT:-1
