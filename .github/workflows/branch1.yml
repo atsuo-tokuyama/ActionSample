@@ -28,7 +28,7 @@ jobs:
           echo ${JOB_RESULT}
 
       - name: Check build result2
-        if: ${env.JOB_RESULT}==2
+        if: env.JOB_RESULT==2
         run: |
           echo ${JOB_RESULT}
 
