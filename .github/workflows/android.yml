@@ -18,6 +18,7 @@ jobs:
     # The following generates a debug APK
     - name: Build with Gradle
       run: ./gradlew assembleDebug
+    #  The following is Sending message to Slack when build failed
     - name: Slack Notification when build failed
       if: failure()
       env:
