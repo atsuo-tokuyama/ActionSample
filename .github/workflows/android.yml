@@ -29,11 +29,13 @@ jobs:
         path: app/build/reports/tests/testDebugUnitTest
     #  The following is Archiving code coverage results
     - name: Slack notification
+      # success() or failure() or always()
+      if: always()
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: ThisIsMyUsername # Optional.
+        SLACK_USERNAME: ActionSample
         SLACK_CHANNEL: ci_test
-        SLACK_OVERRIDE_MESSAGE: 'Custom message' # Optional.
+        SLACK_OVERRIDE_MESSAGE: ${{ github.repository }}
       uses: Ilshidur/action-slack@master
       with:
         args: 'A new commit has been pushed.'
