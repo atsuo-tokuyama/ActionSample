@@ -22,6 +22,7 @@ jobs:
       - name: Check build result1
         run: |
           echo ${JOB_RESULT}
+          env.JOB_RESULT = 1
         env:
           ABC: 2
 
