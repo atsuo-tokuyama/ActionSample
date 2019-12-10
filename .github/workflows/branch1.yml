@@ -22,7 +22,10 @@ jobs:
       - name: Check build result1
         run: |
           echo ${JOB_RESULT}
+        env:
+          ABC: 2
 
       - name: Check build result2
         run: |
           echo ${JOB_RESULT}
+          echo ${ABC}
