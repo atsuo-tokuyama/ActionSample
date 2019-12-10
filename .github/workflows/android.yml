@@ -35,10 +35,34 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ActionSample
         SLACK_CHANNEL: ci_test
-        SLACK_OVERRIDE_MESSAGE: 'https://github.com/${{ github.repository }}/${{ github.sha }}'
+        SLACK_OVERRIDE_MESSAGE: 'https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
       uses: Ilshidur/action-slack@master
       with:
         args: 'A new commit has been pushed.'
+    - name: Dump GitHub context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: Dump job context
+      env:
+        JOB_CONTEXT: ${{ toJson(job) }}
+      run: echo "$JOB_CONTEXT"
+    - name: Dump steps context
+      env:
+        STEPS_CONTEXT: ${{ toJson(steps) }}
+      run: echo "$STEPS_CONTEXT"
+    - name: Dump runner context
+      env:
+        RUNNER_CONTEXT: ${{ toJson(runner) }}
+      run: echo "$RUNNER_CONTEXT"
+    - name: Dump strategy context
+      env:
+        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+      run: echo "$STRATEGY_CONTEXT"
+    - name: Dump matrix context
+      env:
+        MATRIX_CONTEXT: ${{ toJson(matrix) }}
+      run: echo "$MATRIX_CONTEXT"
     
     # The following is uploading debug apk to the deploygate
     #- name: Distribute App
