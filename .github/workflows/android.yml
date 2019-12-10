@@ -5,6 +5,8 @@ on:
     branches:    
       - master         # Push events on master branch
 jobs:
+  env:
+    RESULT:0
   build:
 
     runs-on: ubuntu-latest
@@ -18,6 +20,11 @@ jobs:
     # The following generates a debug APK
     - name: Build with Gradle
       run: ./gradlew assembleDebug
+
+    - name: Check build result
+      env:
+        RESULT: -1
+
     #  The following is Sending message to Slack when build failed
     - name: Slack Notification when build failed
       if: failure()
@@ -27,7 +34,7 @@ jobs:
         SLACK_TITLE: ':fire::fire::fire: Build error! :fire::fire::fire:'
         SLACK_MESSAGE: "Build error! Please check github!"
         SLACK_USERNAME: ${{ github.repository }}
-        SLACK_CHANNEL: ci_test
+        SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
       uses: rtCamp/action-slack-notify@master
       with:
         args: 'A new commit has been pushed.'
@@ -50,7 +57,7 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ${{ github.repository }}
         SLACK_COLOR: '#ff0000'
-        SLACK_CHANNEL: ci_test
+        SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
         SLACK_TITLE: ':fire::fire::fire: Test error! :fire::fire::fire:'
         SLACK_MESSAGE: "Test error! Please check github!"
         # 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
@@ -60,7 +67,7 @@ jobs:
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ${{ github.repository }}
-        SLACK_CHANNEL: ci_test
+        SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
         SLACK_TITLE: ':rocket::rocket::rocket: Finished build and test! :rocket::rocket::rocket:'
         SLACK_MESSAGE: "you're doing great!"
         # 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
