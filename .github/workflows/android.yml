@@ -25,18 +25,18 @@ jobs:
       run: |
         echo "::set-env name=JOB_RESULT::1"
 
-    - name: Check build result2
-      run: |
-        echo ${JOB_RESULT}
-
-    - name: Check build result3
-      if: env.JOB_RESULT==1
-      run: |
-        echo ${JOB_RESULT}
+#    - name: Check build result2
+#      run: |
+#        echo ${JOB_RESULT}
+#
+#    - name: Check build result3
+#      if: env.JOB_RESULT==1
+#      run: |
+#        echo ${JOB_RESULT}
 
     #  The following is Sending message to Slack when build failed
     - name: Slack Notification when build failed
-      if: env.JOB_RESULT==1
+      if: always() && env.JOB_RESULT==1
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_COLOR: '#ff0000'
