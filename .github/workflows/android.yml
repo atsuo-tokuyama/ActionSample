@@ -16,17 +16,17 @@ jobs:
       with:
         java-version: 1.8
     # The following generates a debug APK
-    #- name: Build with Gradle
-    #  run: ./gradlew assembleDebug
+    - name: Build with Gradle
+      run: ./gradlew assembleDebug
     # The following is running unit tests
-    #- name: Unit Test
-    #  run: ./gradlew test
-    #  The following is Archiving code coverage results
-    #- name: Archive code coverage results
-    #  uses: actions/upload-artifact@v1
-    #  with:
-    #    name: code-coverage-report
-    #    path: app/build/reports/tests/testDebugUnitTest
+    - name: Unit Test
+      run: ./gradlew test
+    # The following is Archiving code coverage results
+    - name: Archive code coverage results
+      uses: actions/upload-artifact@v1
+      with:
+        name: code-coverage-report
+        path: app/build/reports/tests/testDebugUnitTest
     #  The following is Archiving code coverage results
     - name: Slack notification
       # success() or failure() or always()
@@ -35,34 +35,10 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ActionSample
         SLACK_CHANNEL: ci_test
-        SLACK_OVERRIDE_MESSAGE: '${{ github.event.commits[0].message }} https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
+        SLACK_OVERRIDE_MESSAGE: '${{ job.status }} ${{ github.event.commits[0].message }} https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
       uses: Ilshidur/action-slack@master
       with:
         args: 'A new commit has been pushed.'
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      run: echo "$GITHUB_CONTEXT"
-    - name: Dump job context
-      env:
-        JOB_CONTEXT: ${{ toJson(job) }}
-      run: echo "$JOB_CONTEXT"
-    - name: Dump steps context
-      env:
-        STEPS_CONTEXT: ${{ toJson(steps) }}
-      run: echo "$STEPS_CONTEXT"
-    - name: Dump runner context
-      env:
-        RUNNER_CONTEXT: ${{ toJson(runner) }}
-      run: echo "$RUNNER_CONTEXT"
-    - name: Dump strategy context
-      env:
-        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-      run: echo "$STRATEGY_CONTEXT"
-    - name: Dump matrix context
-      env:
-        MATRIX_CONTEXT: ${{ toJson(matrix) }}
-      run: echo "$MATRIX_CONTEXT"
     
     # The following is uploading debug apk to the deploygate
     #- name: Distribute App
