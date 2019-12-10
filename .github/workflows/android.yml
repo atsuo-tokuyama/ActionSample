@@ -6,7 +6,8 @@ on:
       - master         # Push events on master branch
 jobs:
   build:
-
+    env:
+      JOB_RESULT: 0
     runs-on: ubuntu-latest
 
     steps:
@@ -21,10 +22,9 @@ jobs:
 
     - name: Check build result
       if: failure()
-      env:
-        JOB_RESULT: -1
       run: |
         echo ${JOB_RESULT}
+        JOB_RESULT:-1
 
     #  The following is Sending message to Slack when build failed
     - name: Slack Notification when build failed
