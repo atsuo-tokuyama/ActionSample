@@ -26,6 +26,10 @@ jobs:
         echo "::set-env name=JOB_RESULT::1"
 
     - name: Check build result2
+      run: |
+        echo ${JOB_RESULT}
+
+    - name: Check build result3
       if: env.JOB_RESULT==1
       run: |
         echo ${JOB_RESULT}
