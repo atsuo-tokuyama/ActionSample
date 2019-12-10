@@ -46,9 +46,9 @@ jobs:
       run: ./gradlew test
 
     - name: Check build result
-        if: failure() && env.BUILD_RESULT==0
-        run: |
-          echo "::set-env name=TEST_RESULT::1"
+      if: failure() && env.BUILD_RESULT==0
+      run: |
+        echo "::set-env name=TEST_RESULT::1"
 
     # The following is Archiving code coverage results
     - name: Archive code coverage results
