@@ -11,22 +11,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
-      - name: set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
+      #- uses: actions/checkout@v1
+      #- name: set up JDK 1.8
+      #  uses: actions/setup-java@v1
+      #  with:
+      #    java-version: 1.8
       # The following generates a debug APK
       #- name: Build with Gradle
       #  run: ./gradlew assembleDebug
       - name: Check build result1
         run: |
           echo ${JOB_RESULT}
-          env.JOB_RESULT = 1
         env:
+          JOB_RESULT: -1
           ABC: 2
 
       - name: Check build result2
         run: |
           echo ${JOB_RESULT}
           echo ${ABC}
+        env:
+          ABC: 3
