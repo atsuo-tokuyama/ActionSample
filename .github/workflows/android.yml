@@ -32,6 +32,7 @@ jobs:
         args: 'A new commit has been pushed.'
     # The following is running unit tests
     - name: Unit Test
+      if: success()
       run: ./gradlew test
     # The following is Archiving code coverage results
     - name: Archive code coverage results
