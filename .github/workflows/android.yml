@@ -7,7 +7,8 @@ on:
 jobs:
   build:
     env:
-      JOB_RESULT: 0
+      BUILD_RESULT: 0
+      TEST_RESULT: 0
     runs-on: ubuntu-latest
 
     steps:
@@ -23,20 +24,11 @@ jobs:
     - name: Check build result
       if: failure()
       run: |
-        echo "::set-env name=JOB_RESULT::1"
-
-#    - name: Check build result2
-#      run: |
-#        echo ${JOB_RESULT}
-#
-#    - name: Check build result3
-#      if: env.JOB_RESULT==1
-#      run: |
-#        echo ${JOB_RESULT}
+        echo "::set-env name=BUILD_RESULT::1"
 
     #  The following is Sending message to Slack when build failed
     - name: Slack Notification when build failed
-      if: always() && env.JOB_RESULT==1
+      if: always() && env.BUILD_RESULT==1
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_COLOR: '#ff0000'
@@ -47,21 +39,29 @@ jobs:
       uses: rtCamp/action-slack-notify@master
       with:
         args: 'A new commit has been pushed.'
+
     # The following is running unit tests
     - name: Unit Test
       if: success()
       run: ./gradlew test
+
+    - name: Check build result
+        if: failure() && env.BUILD_RESULT==0
+        run: |
+          echo "::set-env name=TEST_RESULT::1"
+
     # The following is Archiving code coverage results
     - name: Archive code coverage results
-      if: always()
+      if: always() && env.BUILD_RESULT==0
       uses: actions/upload-artifact@v1
       with:
         name: code-coverage-report
         path: app/build/reports/tests/testDebugUnitTest
+
     #  The following is Sending message to Slack
     - name: Slack notification when test failed
       # success() or failure() or always()
-      if: failure()
+      if: failure() && env.BUILD_RESULT==0 && env.TEST_RESULT==1
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ${{ github.repository }}
