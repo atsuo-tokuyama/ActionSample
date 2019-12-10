@@ -35,7 +35,7 @@ jobs:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_USERNAME: ActionSample
         SLACK_CHANNEL: ci_test
-        SLACK_OVERRIDE_MESSAGE: ${{ github.repository }}
+        SLACK_OVERRIDE_MESSAGE: 'https://github.com/${{ github.repository }}/$ {{ GITHUB_SHA }}'
       uses: Ilshidur/action-slack@master
       with:
         args: 'A new commit has been pushed.'
