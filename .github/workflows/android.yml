@@ -19,12 +19,12 @@ jobs:
     # The following is running unit tests
     - name: Unit Test
       run: ./gradlew test
-    # 
+    #  The following is Archiving code coverage results
     - name: Archive code coverage results
       uses: actions/upload-artifact@v1
       with:
         name: code-coverage-report
-        path: app/build/reports/tests/testDebugUnitTest/index.html
+        path: app/build/reports/tests/testDebugUnitTest/*
     # The following is uploading debug apk to the deploygate
     - name: Distribute App
       run: |
