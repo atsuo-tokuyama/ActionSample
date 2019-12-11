@@ -22,6 +22,14 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    
+    # Looking for gradle caches
+    - uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
     # The following generates a debug APK
     - name: Build with Gradle
