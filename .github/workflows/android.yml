@@ -11,13 +11,17 @@ jobs:
       BUILD_RESULT: 0
       # テストの成否
       TEST_RESULT: 0
+      # Slackの情報
       SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
       SLACK_USERNAME: ${{ github.repository }}
       SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
     runs-on: ubuntu-latest
 
     steps:
+    # Checking out
     - uses: actions/checkout@v1
+    
+    # Setting up JDK
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
