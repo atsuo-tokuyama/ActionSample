@@ -7,68 +7,100 @@ on:
 jobs:
   build:
     env:
-      JOB_RESULT: 0
+      # ビルドの成否
+      BUILD_RESULT: 0
+      # テストの成否
+      TEST_RESULT: 0
+      # Slackの情報
+      SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+      SLACK_USERNAME: ${{ github.repository }}
+      SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
     runs-on: ubuntu-latest
 
     steps:
+    # Checking out
     - uses: actions/checkout@v1
+    
+    # Setting up JDK
     - name: set up JDK 1.8
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    
+    # Looking for gradle caches
+    - uses: actions/cache@v1
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     # The following generates a debug APK
     - name: Build with Gradle
       run: ./gradlew assembleDebug
 
+    # saving build result
     - name: Check build result
       if: failure()
       run: |
-        echo ${JOB_RESULT}
-        JOB_RESULT:-1
+        echo "::set-env name=BUILD_RESULT::1"
 
     #  The following is Sending message to Slack when build failed
     - name: Slack Notification when build failed
-      if: env.JOB_RESULT == -1
+      if: failure()
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        #SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_COLOR: '#ff0000'
         SLACK_TITLE: ':fire::fire::fire: Build error! :fire::fire::fire:'
         SLACK_MESSAGE: "Build error! Please check github!"
-        SLACK_USERNAME: ${{ github.repository }}
-        SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+        #SLACK_USERNAME: ${{ github.repository }}
+        #SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
       uses: rtCamp/action-slack-notify@master
       with:
         args: 'A new commit has been pushed.'
+
     # The following is running unit tests
     - name: Unit Test
       if: success()
       run: ./gradlew test
+
+    # saving test result
+    - name: Check test result
+      # ビルドは成功しているのにfailureの場合はテストがエラーとなっている
+      if: failure() && env.BUILD_RESULT==0
+      run: |
+        echo "::set-env name=TEST_RESULT::1"
+
     # The following is Archiving code coverage results
     - name: Archive code coverage results
-      if: always()
+      # ビルドは成功が成功していればテストを実行しているのでカバレッジレポートをアップロードします
+      if: always() && env.BUILD_RESULT==0
       uses: actions/upload-artifact@v1
       with:
         name: code-coverage-report
         path: app/build/reports/tests/testDebugUnitTest
-    #  The following is Sending message to Slack
+
+    #  The following is Sending message to Slack when testing failed
     - name: Slack notification when test failed
-      # success() or failure() or always()
-      if: failure()
+      # テストが失敗していればスラックに通知します
+      if: failure() && env.TEST_RESULT==1
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: ${{ github.repository }}
-        SLACK_COLOR: '#ff0000'
-        SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
-        SLACK_TITLE: ':fire::fire::fire: Test error! :fire::fire::fire:'
+        #SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        #SLACK_USERNAME: ${{ github.repository }}
+        #SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+        SLACK_COLOR: '#ffff00'
+        SLACK_TITLE: ':thumbsdown::thumbsdown::thumbsdown: Test error! :thumbsdown::thumbsdown::thumbsdown:'
         SLACK_MESSAGE: "Test error! Please check github!"
-        # 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
       uses: rtCamp/action-slack-notify@master
+
+      #  The following is Sending message to Slack when success
     - name: Slack notification when test success
+      # 全て問題なければスラックに通知します
       if: success()
       env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-        SLACK_USERNAME: ${{ github.repository }}
-        SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+        #SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        #SLACK_USERNAME: ${{ github.repository }}
+        #SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
         SLACK_TITLE: ':rocket::rocket::rocket: Finished build and test! :rocket::rocket::rocket:'
         SLACK_MESSAGE: "you're doing great!"
         # 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
