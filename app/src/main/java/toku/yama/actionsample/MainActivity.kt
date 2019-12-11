@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         println(ans)
     }
 
-    fun addition(a:Int, b:Int):Int {
+    private fun addition(a:Int, b:Int):Int {
         return a+b
     }
 }
