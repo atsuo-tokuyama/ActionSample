@@ -106,6 +106,7 @@ jobs:
         # 'job: ${{ job.status }} \nlatest_comment: ${{ github.event.commits[0].message }} \nlatest_commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}'
       uses: rtCamp/action-slack-notify@master
     
+    # deploygateを使う場合は以下のコメントを外してsecretにDEPLOYGATE_TOKENとDEPLOYGATE_USERを追加します
     # The following is uploading debug apk to the deploygate
     #- name: Distribute App
     #  run: |
