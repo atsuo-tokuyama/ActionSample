@@ -16,4 +16,6 @@ class MainActivity : AppCompatActivity() {
     private fun addition(a:Int, b:Int):Int {
         return a+b
     }
+
+    aaa
 }
