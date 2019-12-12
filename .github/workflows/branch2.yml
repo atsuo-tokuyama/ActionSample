@@ -6,8 +6,6 @@ on:
       - branch2         # Push events on master branch
 jobs:
   build:
-    env:
-      JOB_RESULT: 0
     runs-on: ubuntu-latest
 
     steps:
