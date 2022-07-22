@@ -25,20 +25,3 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assembleDebug
       
-      - name: Check build result1
-        run: |
-          echo ${JOB_RESULT}
-          echo "::set-env name=JOB_RESULT::1"
-          echo ${JOB_RESULT}
-          echo "::set-env name=JOB_RESULT::2"
-          echo ${JOB_RESULT}
-
-      - name: Check build result2
-        if: env.JOB_RESULT==2
-        run: |
-          echo ${JOB_RESULT}
-
-      - name: Check build result3
-        if: env.JOB_RESULT==1
-        run: |
-          echo ${JOB_RESULT}
