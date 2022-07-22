@@ -21,10 +21,15 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
+      ###############################################
       - name: Update secret key
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: echo SECRET_KEY="$SECRET_KEY" >> ./local.properties
+      ###############################################
+
+      - run: echo aiueo >> ./local.properties |
+         echo kakikukeko >> ./local.properties
 
       - uses: pCYSl5EDgo/cat@master
         id: hello
