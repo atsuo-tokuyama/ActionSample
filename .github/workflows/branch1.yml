@@ -32,7 +32,7 @@ jobs:
       - run: echo aiueo=1 >> ./debug.properties |
          echo kakikukeko=2 >> ./debug.properties
 
-      - run: echo PROP=GITHUB_ACTIONS >> ./local.properties
+      # - run: touch ./local.properties
       
       # The following generates a debug APK
       - name: Build with Gradle
