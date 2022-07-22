@@ -25,16 +25,17 @@ jobs:
       - name: Update secret key
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: echo SECRET_KEY="$SECRET_KEY" >> ./local.properties
+        run: echo SECRET_KEY="$SECRET_KEY" >> ./debug.properties |
+          echo SAMPLE_KEY=-DEBUG >> ./debug.properties
       ###############################################
 
-      - run: echo aiueo >> ./local.properties |
-         echo kakikukeko >> ./local.properties
+      - run: echo aiueo=1 >> ./debug.properties |
+         echo kakikukeko=2 >> ./debug.properties
 
       - uses: pCYSl5EDgo/cat@master
         id: hello
         with:
-          path: ./local.properties
+          path: ./debug.properties
 
       - run: echo $TEXT
         env:

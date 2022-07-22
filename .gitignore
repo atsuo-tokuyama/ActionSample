@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 .idea
+debug.properties
+release.properties
