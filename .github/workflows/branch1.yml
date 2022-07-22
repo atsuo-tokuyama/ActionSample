@@ -21,10 +21,19 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Update Username from Secrets
+      - name: Update secret key
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: echo SECRET_KEY="$SECRET_KEY" >> ./local.properties
+
+      - uses: pCYSl5EDgo/cat@master
+        id: hello
+        with:
+          path: /local.properties
+
+      - run: echo $TEXT
+        env:
+          TEXT: ${{ steps.hello.outputs.text }}
       
       # The following generates a debug APK
       - name: Build with Gradle
