@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val textView = findViewById<TextView>(R.id.textView)
-        textView.text = BuildConfig.SECRET_KEY.plus(" ").plus(BuildConfig.SAMPLE_KEY)
+        textView.text = BuildConfig.SECRET_KEY.plus(" ").plus(BuildConfig.SAMPLE_KEY).plus(" ${BuildConfig.PROP}")
 
 
         val ans = addition(1, 3)
